@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from classes.Stock import Stock
+from classes.Stock import Risk, Stock
 
 #*Stop Loss
 # porcentage over the total invested to limit and sell
@@ -19,13 +19,13 @@ FinanceStock : Stock = Stock(6, 6)
 TYPE_GENES : List[Stock] = [TechStock, HealthStock, ServicesStock, FinanceStock]
 
 #*Risk
-RISK_GENES : List[Dict[str, int]]= [
-    {"NO_RISK" : 0, },
-    {"LOW_RISK" : 5 },
-    {"MEDIUM_RISK" : 10},
-    {"HIGH_RISK" : 5 }
-]
+NoRisk : Risk = Risk(0)
+LowRisk : Risk = Risk(5)
+MediumRisk : Risk = Risk(10)
+HighRisk : Risk = Risk(20)
+
+RISK_GENES : List[Risk]= [NoRisk, LowRisk, MediumRisk, HighRisk]
 
 
 #*
-SCHEDULE_GENES : List[int] = [1, 2, 4]
+SCHEDULE_GENES : List[int] = [1, 2, 3, 4]

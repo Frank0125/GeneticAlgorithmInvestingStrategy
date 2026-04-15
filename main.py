@@ -1,10 +1,11 @@
+import lib #setting seed first
 from classes.InvestStrategy import InvestStrategy
 
-InvestStrategy1 = InvestStrategy()
+InvestStrategy1 = InvestStrategy(schedule=1)
 
 def main():
-    print("Hello World")
-    InvestStrategy1.print_gene_catalogue()
+    # InvestStrategy1.print_gene_catalogue()
+    InvestStrategy1.simulate_month()
 
 
 main()
