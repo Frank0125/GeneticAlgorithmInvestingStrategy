@@ -6,9 +6,9 @@ from classes.Stock import Risk, SimpleStock, Stock
 # porcentage over the total invested to limit and sell
 # st_ls_p: stop-loss positive genes and _n is for negative
 st_gene_size : int = 10
-ST_LS_P_GENES : List[int] = [10,15,20,25,30,35,40,45,50,100]
+STOP_LOSS_GENES : List[int] = [10,30,50,100] #!1
 
-ST_LS_N_GENES : List[int]= [15,20,25,35,45,55,65,75,85,100]
+TAKE_PROFIT_GENES : List[int]= [15,30, 45,100] #!2
 
 #* Declaring Type of Stock
 TechStock : Stock = SimpleStock(8, 8)
@@ -16,15 +16,16 @@ HealthStock : Stock = SimpleStock(3, 2)
 ServicesStock : Stock = SimpleStock(5, 4)
 FinanceStock : Stock = SimpleStock(6, 6)
 
-TYPE_GENES : List[Stock] = [TechStock, HealthStock, ServicesStock, FinanceStock]
+TYPE_GENES : List[Stock] = [TechStock, HealthStock, ServicesStock, FinanceStock] #!3
 
 #*Risk
 NoRisk : Risk = Risk(0)
 LowRisk : Risk = Risk(5)
 MediumRisk : Risk = Risk(10)
 HighRisk : Risk = Risk(20)
-RISK_GENES : List[Risk]= [NoRisk, LowRisk, MediumRisk, HighRisk]
+
+RISK_GENES : List[Risk]= [NoRisk, LowRisk, MediumRisk, HighRisk] #!4
 
 
 #*
-SCHEDULE_GENES : List[int] = [1, 2, 3, 4]
+SCHEDULE_GENES : List[int] = [1, 2, 3, 4] #!5
