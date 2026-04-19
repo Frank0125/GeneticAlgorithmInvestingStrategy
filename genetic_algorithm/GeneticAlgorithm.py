@@ -33,7 +33,7 @@ class GeneticAlgorithmJohn():
             # print("MUTATION")
             return 1
         return 0
-    
+    #mutation strategy
     def mutate_gene(self, gene_array_p : List[List[int]]) -> List[List[int]]:
         selected_gene : int = random.randint(0, 4)
         gene_array_p[selected_gene] = random.randint(0,3)
@@ -56,6 +56,7 @@ class GeneticAlgorithmJohn():
 
         return offspring_gene_array
 
+    # region Reproduction
     def get_offspring_genes(self, best_strats_p : List[InvestStrategy]) -> List[List[int]]:
         offspring_genes: List[List[int]] = []
 
@@ -79,7 +80,7 @@ class GeneticAlgorithmJohn():
         return offspring_genes
     
     
-    #region Reproduce
+    #create new population with offsping genes
     def reproduce(self, offspring_genes_p : List[List[int]]) -> None: #! crossover + mutation        
         self.kill_last_population()
         self.strategies = [InvestStrategy(offspring_genes_p[i]) for i in range(self.population_size-1)]
