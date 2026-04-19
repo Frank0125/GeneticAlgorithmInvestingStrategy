@@ -38,8 +38,8 @@ def main():
         InvestStrategy1.simulate_months(120)
         InvestStrategy1.print_total_winnings()
 
-    genetic_algorithm = GeneticAlgorithmJohn(popupalation_size_p=100, mutation_rate_p=5, ranking_p=25)
-    genetic_algorithm.run_generation(3)
+    genetic_algorithm = GeneticAlgorithmJohn(popupalation_size_p=100, mutation_rate_p=5, ranking_p=50)
+    genetic_algorithm.run_generations(3)
 
 
 main()

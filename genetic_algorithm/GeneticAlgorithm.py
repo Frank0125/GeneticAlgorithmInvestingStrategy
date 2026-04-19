@@ -6,6 +6,7 @@ from classes.InvestStrategy import InvestStrategy
 
 #TODO
 #mutation logic
+#correct ranking in ranking function
 #! Genetic algorithm to get the best arrangement of genes in an Investment Strategy to get the most amount of money in 10 years (total winnings)
 class GeneticAlgorithmJohn():
     def __init__(self, popupalation_size_p : int, mutation_rate_p : int, ranking_p : int) -> None:
@@ -41,45 +42,67 @@ class GeneticAlgorithmJohn():
     def get_offspring_genes(self, best_strats_p : List[InvestStrategy]) -> List[List[int]]:
         offspring_genes: List[List[int]] = []
 
-        for i in range(0, len(best_strats_p) - 1, 2):
-            mother = best_strats_p[i]
-            father = best_strats_p[i+1]
+        for j in range(0, len(best_strats_p) -1, 1):
+            mother = best_strats_p[j]
+            father = best_strats_p[j+1]
             
             child_genes = self.crossover(mother.gene_array, father.gene_array)
             offspring_genes.append(child_genes)
         
+        for j in range(0, len(best_strats_p) - 1, 1):
+            father = best_strats_p[j]
+            mother = best_strats_p[j+1]
+            
+            child_genes = self.crossover(mother.gene_array, father.gene_array)
+            offspring_genes.append(child_genes)
+        
+        #append remaining two genes
+        offspring_genes.append(self.crossover(best_strats_p[0].gene_array, best_strats_p[len(best_strats_p) - 1].gene_array))
+        offspring_genes.append(self.crossover(best_strats_p[1].gene_array, best_strats_p[len(best_strats_p) - 2].gene_array))
         return offspring_genes
     
     
     #region Reproduce
     def reproduce(self, offspring_genes_p : List[List[int]]) -> None: #! crossover + mutation        
         self.kill_last_population()
+        print(len(offspring_genes_p))
         self.strategies = [InvestStrategy(offspring_genes_p[i]) for i in range(self.population_size)]
         return
 
     def rank_strategies(self) -> List[InvestStrategy]:
         self.strategies.sort(key=lambda x: x.total_winnings, reverse=True)
         best_strats = self.strategies[:self.ranking]
-        self.print_best_ranking(best_strats_p=best_strats)
         return best_strats
     
-    def run_generation(self, generations : int = 1) -> None:
+    def run_generations(self, generations : int = 1) -> None:
         years : int = 10
         months : int = 12 * years
         for g in range(1, generations + 1):
             print("Gen: ", g)        
             if (g==1):
                 [si.simulate_months(months) for si in self.strategies]
-                best_si = self.rank_strategies()
-                gs = self.get_offspring_genes(best_strats_p=best_si)
+                best_strats = self.rank_strategies()
+                self.print_best_ranking(best_strats_p=best_strats)
+                gs = self.get_offspring_genes(best_strats_p=best_strats)
                 self.reproduce(gs)
             else:
-                best_si = self.rank_strategies()
-                gs = self.get_offspring_genes(best_strats_p=best_si)
+                [si.simulate_months(months) for si in self.strategies]
+                best_strats = self.rank_strategies()
+                self.print_best_ranking(best_strats_p=best_strats)
+                gs = self.get_offspring_genes(best_strats_p=best_strats)
                 self.reproduce(gs)
         print("Gen end")        
+        self.print_best_gene_array()
 
     def print_best_ranking(self, best_strats_p : List[InvestStrategy]) -> None:
         print(self.ranking, "best total winnings: ")
         [b.print_total_winnings() for b in best_strats_p]
+        return
+    
+    def print_best_gene_array(self) -> None:
+        best_strats = self.rank_strategies()
+        best_gene_array : List[List[int]] = best_strats[0].gene_array  
+        print("Best Gene Array")
+        print("[", best_gene_array[0], ",", best_gene_array[1], ",", best_gene_array[2], ",",
+               best_gene_array[3], ",", best_gene_array[4], "]")
         return
