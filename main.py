@@ -19,7 +19,7 @@ def argHandler():
     
     args = parser.parse_args()
 
-    return vars(args) if args.sc else None
+    return args if args.sc else None
 
 
 def main():
@@ -27,17 +27,18 @@ def main():
 
     if gene_params != None:
         InvestStrategy1 = InvestStrategy(
-            stop_loss_gene=gene_params.sl,
-            take_profit_gene=gene_params.tk,
-            stock_gene=gene_params.s,
-            risk_gene=gene_params.r,
-            schedule_gene=gene_params.sc, 
-            )
+            gene_array=[gene_params.sl,
+            gene_params.tk,
+            gene_params.s,
+            gene_params.r,
+            gene_params.sc, 
+            ])
 
         # InvestStrategy1.print_gene_catalogue()
         InvestStrategy1.simulate_months(120)
+        InvestStrategy1.print_total_winnings()
 
-    genetic_algorithm = GeneticAlgorithmJohn(popupalation_size_p=100, mutation_rate_p=5)
+    genetic_algorithm = GeneticAlgorithmJohn(popupalation_size_p=100, mutation_rate_p=5, ranking_p=25)
     genetic_algorithm.run_generation()
 
 

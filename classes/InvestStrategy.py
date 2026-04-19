@@ -6,23 +6,21 @@ from classes.Stock import Risk, RiskDecorator, Stock
 from genetic_algorithm.GeneCollections import TAKE_PROFIT_GENES, STOP_LOSS_GENES, RISK_GENES, STOCK_GENES, SCHEDULE_GENES
 
 RISE = [-1,1]
-#TODO
 
-#ADD year logic
-#turn performance into random range-toggle
 class InvestStrategy():
-    def __init__(self, stock_gene = 0, risk_gene = 0, schedule_gene = 0,
-                 stop_loss_gene = 0, take_profit_gene = 0): #all parameters are genes
-        self.gene_array = [stock_gene, take_profit_gene, stock_gene, risk_gene, schedule_gene]
-        self.chosen_stock : Stock = RiskDecorator(STOCK_GENES[stock_gene], RISK_GENES[risk_gene]) #to the stock we add the values added from risk gene, now chosen_stock has total risk and performance
-        self.schedule : int = SCHEDULE_GENES[schedule_gene]
-        self.stop_loss : float = -(STOP_LOSS_GENES[stop_loss_gene] / 100) + 1
-        self.take_profit : float= (TAKE_PROFIT_GENES[take_profit_gene] / 100) + 1
+    def __init__(self, gene_array): #all parameters are genes
+        self.gene_array = gene_array
+        self.chosen_stock : Stock = RiskDecorator(STOCK_GENES[gene_array[2]], RISK_GENES[gene_array[3]]) #to the stock we add the values added from risk gene, now chosen_stock has total risk and performance
+        self.schedule : int = SCHEDULE_GENES[gene_array[4]]
+        self.stop_loss : float = -(STOP_LOSS_GENES[gene_array[0]] / 100) + 1
+        self.take_profit : float= (TAKE_PROFIT_GENES[gene_array[1]] / 100) + 1
         
         self.net_worth : float = 0 #!set to 0
         self.total_winnings : float = 0
         self.rise : int = 0 # decides if the stock will rise or not. 0 = drop 1 = rise
-        
+    
+    def get_total_winnings(self) -> float:
+        return self.total_winnings
 
     def rise_calculation(self) -> None:
         random_num = random.randint(0, 80) #different everytime
@@ -76,7 +74,7 @@ class InvestStrategy():
 
         self.add_total_winnings() #!Sell everything after 10 years
         # self.print_net_worth()
-        self.print_total_winnings() 
+        # self.print_total_winnings()
         
         return
     
@@ -92,5 +90,5 @@ class InvestStrategy():
 
 
     def print_total_winnings(self) -> None:
-        print("Total winnings in 10 years: $", self.total_winnings)
+        print("Total winnings in 10 years: $", self.get_total_winnings())
 
