@@ -3,7 +3,7 @@ import random
 from abc import ABC, abstractmethod
 from classes.Stock import Risk, RiskDecorator, Stock
 
-from GeneCollections import TAKE_PROFIT_GENES, STOP_LOSS_GENES, RISK_GENES, STOCK_GENES, SCHEDULE_GENES
+from genetic_algorithm.GeneCollections import TAKE_PROFIT_GENES, STOP_LOSS_GENES, RISK_GENES, STOCK_GENES, SCHEDULE_GENES
 
 RISE = [-1,1]
 #TODO
@@ -11,12 +11,13 @@ RISE = [-1,1]
 #ADD year logic
 #turn performance into random range-toggle
 class InvestStrategy():
-    def __init__(self, stock_gene = STOCK_GENES[0], risk_gene = RISK_GENES[3], schedule = SCHEDULE_GENES[0],
-                 stop_loss_gene = TAKE_PROFIT_GENES[0], take_profit_gene = TAKE_PROFIT_GENES[0]): #all parameters are genes
-        self.chosen_stock : Stock = RiskDecorator(stock_gene, risk_gene) #to the stock we add the values added from risk gene, now chosen_stock has total risk and performance
-        self.schedule : int = schedule
-        self.stop_loss : float = -(stop_loss_gene / 100) + 1
-        self.take_profit : float= (take_profit_gene / 100) + 1
+    def __init__(self, stock_gene = 0, risk_gene = 0, schedule_gene = 0,
+                 stop_loss_gene = 0, take_profit_gene = 0): #all parameters are genes
+        self.gene_array = [stock_gene, take_profit_gene, stock_gene, risk_gene, schedule_gene]
+        self.chosen_stock : Stock = RiskDecorator(STOCK_GENES[stock_gene], RISK_GENES[risk_gene]) #to the stock we add the values added from risk gene, now chosen_stock has total risk and performance
+        self.schedule : int = SCHEDULE_GENES[schedule_gene]
+        self.stop_loss : float = -(STOP_LOSS_GENES[stop_loss_gene] / 100) + 1
+        self.take_profit : float= (TAKE_PROFIT_GENES[take_profit_gene] / 100) + 1
         
         self.net_worth : float = 0 #!set to 0
         self.total_winnings : float = 0

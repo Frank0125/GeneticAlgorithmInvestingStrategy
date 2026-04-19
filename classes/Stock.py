@@ -51,7 +51,7 @@ class RiskDecorator(StockDecorator):
         self.extra_risk = extra_risk
 
     def get_risk(self) -> int:
-        return super().get_risk() + self.extra_risk.get_added_risk()
+        return super().get_risk() + round(self.extra_risk.get_added_risk() / 2) #!Tweak this to make risky stocks more of a viable strategy, for variety sake
     
     def get_performance(self) -> int:
-        return super().get_performance() + self.extra_risk.get_bonus_performance()
+        return super().get_performance() + (self.extra_risk.get_bonus_performance() * 50) #!Tweak this to make risky stocks more of a viable strategy, for variety sake

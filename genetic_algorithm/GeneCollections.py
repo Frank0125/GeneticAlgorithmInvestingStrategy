@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import List
 
 from classes.Stock import Risk, SimpleStock, Stock
 
@@ -6,7 +6,7 @@ from classes.Stock import Risk, SimpleStock, Stock
 # porcentage over the total invested to limit and sell
 # st_ls_p: stop-loss positive genes and _n is for negative
 st_gene_size : int = 10
-STOP_LOSS_GENES : List[int] = [10,30,50,100] #!1
+STOP_LOSS_GENES : List[int] = [10,30,50,200] #!1
 
 TAKE_PROFIT_GENES : List[int]= [15,30, 45,100] #!2
 
@@ -22,7 +22,7 @@ STOCK_GENES : List[Stock] = [TechStock, HealthStock, ServicesStock, FinanceStock
 NoRisk : Risk = Risk(0)
 LowRisk : Risk = Risk(5)
 MediumRisk : Risk = Risk(10)
-HighRisk : Risk = Risk(20)
+HighRisk : Risk = Risk(15)
 
 RISK_GENES : List[Risk]= [NoRisk, LowRisk, MediumRisk, HighRisk] #!4
 
