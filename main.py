@@ -27,7 +27,7 @@ def main():
 
     if gene_params != None:
         InvestStrategy1 = InvestStrategy(
-            gene_array=[gene_params.sl,
+            gene_array_p=[gene_params.sl,
             gene_params.tk,
             gene_params.s,
             gene_params.r,
@@ -39,7 +39,7 @@ def main():
         InvestStrategy1.print_total_winnings()
 
     genetic_algorithm = GeneticAlgorithmJohn(popupalation_size_p=100, mutation_rate_p=5, ranking_p=25)
-    genetic_algorithm.run_generation()
+    genetic_algorithm.run_generation(3)
 
 
 main()

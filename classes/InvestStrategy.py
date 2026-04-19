@@ -1,6 +1,7 @@
 import math
 import random
 from abc import ABC, abstractmethod
+from typing import List
 from classes.Stock import Risk, RiskDecorator, Stock
 
 from genetic_algorithm.GeneCollections import TAKE_PROFIT_GENES, STOP_LOSS_GENES, RISK_GENES, STOCK_GENES, SCHEDULE_GENES
@@ -8,12 +9,12 @@ from genetic_algorithm.GeneCollections import TAKE_PROFIT_GENES, STOP_LOSS_GENES
 RISE = [-1,1]
 
 class InvestStrategy():
-    def __init__(self, gene_array): #all parameters are genes
-        self.gene_array = gene_array
-        self.chosen_stock : Stock = RiskDecorator(STOCK_GENES[gene_array[2]], RISK_GENES[gene_array[3]]) #to the stock we add the values added from risk gene, now chosen_stock has total risk and performance
-        self.schedule : int = SCHEDULE_GENES[gene_array[4]]
-        self.stop_loss : float = -(STOP_LOSS_GENES[gene_array[0]] / 100) + 1
-        self.take_profit : float= (TAKE_PROFIT_GENES[gene_array[1]] / 100) + 1
+    def __init__(self, gene_array_p : List[int]): #all parameters are genes
+        self.gene_array = gene_array_p
+        self.chosen_stock : Stock = RiskDecorator(STOCK_GENES[gene_array_p[2]], RISK_GENES[gene_array_p[3]]) #to the stock we add the values added from risk gene, now chosen_stock has total risk and performance
+        self.schedule : int = SCHEDULE_GENES[gene_array_p[4]]
+        self.stop_loss : float = -(STOP_LOSS_GENES[gene_array_p[0]] / 100) + 1
+        self.take_profit : float= (TAKE_PROFIT_GENES[gene_array_p[1]] / 100) + 1
         
         self.net_worth : float = 0 #!set to 0
         self.total_winnings : float = 0
