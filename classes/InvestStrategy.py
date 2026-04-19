@@ -75,7 +75,7 @@ class InvestStrategy():
                 self.growth()
 
         self.add_total_winnings() #!Sell everything after 10 years
-        self.print_net_worth()
+        # self.print_net_worth()
         self.print_total_winnings() 
         
         return

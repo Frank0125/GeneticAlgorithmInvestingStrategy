@@ -6,15 +6,16 @@ from classes.InvestStrategy import InvestStrategy
 
 #! Genetic algorithm to get the best arrangement of genes in an Investment Strategy to get the most amount of money in 10 years (total winnings)
 class GeneticAlgorithmJohn():
-    def __init__(self, popupalation_size_p, mutation_rate_p):
+    def __init__(self, popupalation_size_p : int, mutation_rate_p : int):
         self.population_size : int = popupalation_size_p
         self.mutation_rate : int = mutation_rate_p
-        self.strategies : List[InvestStrategy] 
+        self.strategies : List[InvestStrategy] = [None] * self.population_size
 
+        self.create_population()
     def create_population(self) -> None:
-        for i in self.population_size - 1:
-            self.strategies[i] = InvestStrategy(i%2, i%3, i%4, i%5, i%6)
-        return
+        self.strategies = [InvestStrategy(i%2, i%3, i%4, i%3, i%2) for i in range(self.population_size)] #cool way of doing for
+
+        return 
 
     def reproduce(self):
         #!rule:
@@ -25,6 +26,5 @@ class GeneticAlgorithmJohn():
     def run_generation(self):
         years : int = 10
         months : int = 12 * years
-        for si in self.strategies:
-            si.simulate_months(months)
-            si.print_total_winnings()
+        [si.simulate_months(months) for si in self.strategies]
+        

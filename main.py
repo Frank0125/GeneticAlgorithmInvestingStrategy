@@ -1,4 +1,5 @@
 import argparse
+from genetic_algorithm.GeneticAlgorithm import GeneticAlgorithmJohn
 import lib #seed configuration first
 
 from genetic_algorithm.GeneCollections import TAKE_PROFIT_GENES, STOP_LOSS_GENES, RISK_GENES, STOCK_GENES, SCHEDULE_GENES
@@ -36,7 +37,8 @@ def main():
         # InvestStrategy1.print_gene_catalogue()
         InvestStrategy1.simulate_months(120)
 
-    print("j")
+    genetic_algorithm = GeneticAlgorithmJohn(popupalation_size_p=100, mutation_rate_p=5)
+    genetic_algorithm.run_generation()
 
 
 main()
