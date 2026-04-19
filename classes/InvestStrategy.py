@@ -18,15 +18,15 @@ class InvestStrategy():
         self.stop_loss : float = -(stop_loss_gene / 100) + 1
         self.take_profit : float= (take_profit_gene / 100) + 1
         
-        self.positive_sells : int = 0
         self.net_worth : float = 0 #!set to 0
         self.total_winnings : float = 0
         self.rise : int = 0 # decides if the stock will rise or not. 0 = drop 1 = rise
         
 
     def rise_calculation(self) -> None:
-        random_num = random.randint(0,100) #different everytime
-        risk_calc : float = (random_num + self.chosen_stock.get_risk()) / 100
+        random_num = random.randint(0, 80) #different everytime
+        random_risk_in_range = random.randint(0, self.chosen_stock.get_risk())
+        risk_calc : float = (random_num + random_risk_in_range) / 100
         rise_trenchmark : float = 0.5
         if risk_calc > rise_trenchmark: #when risk calculation is over trenchmark, rise gets set to 0
             self.rise = 0
@@ -34,9 +34,9 @@ class InvestStrategy():
             self.rise = 1
         return
 
-    # @abstractmethod
-    #def invest(self, baseStrength : int) -> int:
-        
+    def invest(self) -> None:
+        self.net_worth += (100 / self.schedule)
+        return 
     
     def growth(self) -> None:
         self.rise_calculation()
@@ -46,30 +46,36 @@ class InvestStrategy():
         self.check_net_worth(prev_net_worth)
         return
     
-    def add_total_winnings(self, amount : float) -> None:
-        self.total_winnings += amount
+    def add_total_winnings(self) -> None:
+        self.total_winnings += self.net_worth
         self.net_worth = 0 #reset net worth
         return
     
     def check_net_worth(self, previous_net_worth : float) -> None:  #! Selling logic
         if self.net_worth >= previous_net_worth * self.take_profit :
-            self.positive_sells += 1
-            self.add_total_winnings(self.net_worth)
+            self.add_total_winnings()
         elif self.net_worth <= previous_net_worth * self.stop_loss :
-            self.positive_sells -= 1
-            self.add_total_winnings(self.net_worth)    
+            self.add_total_winnings()    
         elif self.net_worth <= 0: #?FUTURE: add leverage logic
-            self.add_total_winnings(self.net_worth)
+            self.add_total_winnings()
         return
 
     def simulate_months(self, months : int) -> None:
-        for i in range(math.ceil(months * self.schedule)):
-            
-            self.growth()  #growth should be done every 2 weeks 
-            #add correct invest function
-            self.net_worth += (100 / self.schedule)
-        self.print_total_winnings()    
-        self.print_positive_sells()    
+        weeks_in_month = 4
+        for i in range(math.ceil(months * weeks_in_month)):
+            if (self.schedule != 3):
+                if (i % (weeks_in_month / self.schedule) == 0):
+                    self.invest()   
+            else:
+                if ((i % 4) < 3):
+                    self.invest()
+
+            if (i % 2 == 0):
+                self.growth()
+
+        self.add_total_winnings() #!Sell everything after 10 years
+        self.print_net_worth()
+        self.print_total_winnings() 
         
         return
     
@@ -83,9 +89,6 @@ class InvestStrategy():
     def print_net_worth(self) -> None:
         print(self.net_worth)
 
-
-    def print_positive_sells(self) -> None:
-        print("Total positive sells: ", self.positive_sells)
 
     def print_total_winnings(self) -> None:
         print("Total winnings in 10 years: $", self.total_winnings)
