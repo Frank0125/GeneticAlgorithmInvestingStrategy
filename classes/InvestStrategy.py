@@ -89,7 +89,7 @@ class InvestStrategy():
     def print_net_worth(self) -> None:
         print(self.net_worth)
 
-
-    def print_total_winnings(self) -> None:
+    #region Evaluated function
+    def print_total_winnings(self) -> None: 
         print("Total winnings in 10 years: $", self.get_total_winnings())
 
