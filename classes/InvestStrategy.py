@@ -3,7 +3,7 @@ import random
 from abc import ABC, abstractmethod
 from classes.Stock import Risk, RiskDecorator, Stock
 
-from GeneCollections import TAKE_PROFIT_GENES, STOP_LOSS_GENES, RISK_GENES, TYPE_GENES, SCHEDULE_GENES
+from GeneCollections import TAKE_PROFIT_GENES, STOP_LOSS_GENES, RISK_GENES, STOCK_GENES, SCHEDULE_GENES
 
 RISE = [-1,1]
 #TODO
@@ -11,7 +11,7 @@ RISE = [-1,1]
 #ADD year logic
 #turn performance into random range-toggle
 class InvestStrategy():
-    def __init__(self, stock_gene = TYPE_GENES[0], risk_gene = RISK_GENES[3], schedule = SCHEDULE_GENES[0],
+    def __init__(self, stock_gene = STOCK_GENES[0], risk_gene = RISK_GENES[3], schedule = SCHEDULE_GENES[0],
                  stop_loss_gene = TAKE_PROFIT_GENES[0], take_profit_gene = TAKE_PROFIT_GENES[0]): #all parameters are genes
         self.chosen_stock : Stock = RiskDecorator(stock_gene, risk_gene) #to the stock we add the values added from risk gene, now chosen_stock has total risk and performance
         self.schedule : int = schedule
@@ -81,7 +81,7 @@ class InvestStrategy():
     
 
     def print_gene_catalogue(self) -> None:
-        gene_catalogue = [STOP_LOSS_GENES, TAKE_PROFIT_GENES, RISK_GENES, TYPE_GENES, SCHEDULE_GENES]
+        gene_catalogue = [STOP_LOSS_GENES, TAKE_PROFIT_GENES, RISK_GENES, STOCK_GENES, SCHEDULE_GENES]
         for gc in gene_catalogue:
             for g in gc:
                 print(g)

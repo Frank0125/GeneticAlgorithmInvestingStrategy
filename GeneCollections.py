@@ -16,7 +16,7 @@ HealthStock : Stock = SimpleStock(3, 2)
 ServicesStock : Stock = SimpleStock(5, 4)
 FinanceStock : Stock = SimpleStock(6, 6)
 
-TYPE_GENES : List[Stock] = [TechStock, HealthStock, ServicesStock, FinanceStock] #!3
+STOCK_GENES : List[Stock] = [TechStock, HealthStock, ServicesStock, FinanceStock] #!3
 
 #*Risk
 NoRisk : Risk = Risk(0)
