@@ -47,11 +47,11 @@ class StockDecorator(Stock):
 class RiskDecorator(StockDecorator):
     def __init__(self, stock : Stock, extra_risk : Risk):
         super().__init__(stock)
-
+        self.risk_leeway = 2 #!Tweak this to make risky stocks more of a viable strategy, for variety sake
         self.extra_risk = extra_risk
 
     def get_risk(self) -> int:
-        return super().get_risk() + round(self.extra_risk.get_added_risk() / 2) #!Tweak this to make risky stocks more of a viable strategy, for variety sake
+        return super().get_risk() + round(self.extra_risk.get_added_risk() / (self.risk_leeway)) 
     
     def get_performance(self) -> int:
-        return super().get_performance() + (self.extra_risk.get_bonus_performance() * 50) #!Tweak this to make risky stocks more of a viable strategy, for variety sake
+        return super().get_performance() + (self.extra_risk.get_bonus_performance() * (self.risk_leeway * 25))
