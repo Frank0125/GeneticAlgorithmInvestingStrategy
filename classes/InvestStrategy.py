@@ -1,62 +1,95 @@
+import math
 import random
 from abc import ABC, abstractmethod
-from classes.Stock import Risk, Stock
+from typing import List
+from classes.Stock import Risk, RiskDecorator, Stock
 
-from GeneCollections import ST_LS_N_GENES, ST_LS_P_GENES, RISK_GENES, TYPE_GENES, SCHEDULE_GENES
+from genetic_algorithm.GeneCollections import TAKE_PROFIT_GENES, STOP_LOSS_GENES, RISK_GENES, STOCK_GENES, SCHEDULE_GENES
 
 RISE = [-1,1]
 
 class InvestStrategy():
-    def __init__(self, chosen_stock = TYPE_GENES[0], schedule = 0): #all parameters are genes
-        self.chosen_stock : Stock = chosen_stock #Stock(performance = 0, sector_risk = 0)
-        self.extra_risk : Risk = Risk(0)
-        self.schedule : int = schedule
-        self.net_worth : float = 1000
-        self.rise : int = 0 # decides if the stock will rise or not. 0 = drop 1 = rise
-        self.total_risk = self.chosen_stock.get_risk() + self.extra_risk.get_added_risk()
+    def __init__(self, gene_array_p : List[int]): #all parameters are genes
+        self.gene_array = gene_array_p
+        self.chosen_stock : Stock = RiskDecorator(STOCK_GENES[gene_array_p[2]], RISK_GENES[gene_array_p[3]]) #to the stock we add the values added from risk gene, now chosen_stock has total risk and performance
+        self.schedule : int = SCHEDULE_GENES[gene_array_p[4]]
+        self.stop_loss : float = -(STOP_LOSS_GENES[gene_array_p[0]] / 100) + 1
+        self.take_profit : float= (TAKE_PROFIT_GENES[gene_array_p[1]] / 100) + 1
         
+        self.net_worth : float = 0 #!set to 0
+        self.total_winnings : float = 0
+        self.rise : int = 0 # decides if the stock will rise or not. 0 = drop 1 = rise
+    
+    def get_total_winnings(self) -> float:
+        return self.total_winnings
 
     def rise_calculation(self) -> None:
-        random_num = random.randint(0,100) #different everytime
-        risk_calc : float = (random_num + self.total_risk) / 100
+        random_num = random.randint(0, 80) #different everytime
+        random_risk_in_range = random.randint(0, self.chosen_stock.get_risk())
+        risk_calc : float = (random_num + random_risk_in_range) / 100
         rise_trenchmark : float = 0.5
-        print(risk_calc)
         if risk_calc > rise_trenchmark: #when risk calculation is over trenchmark, rise gets set to 0
             self.rise = 0
         else:
             self.rise = 1
         return
 
-    # @abstractmethod
-    #def invest(self, baseStrength : int) -> int:
-        
+    def invest(self) -> None:
+        self.net_worth += (100 / self.schedule)
+        return 
     
     def growth(self) -> None:
         self.rise_calculation()
-        print(RISE[self.rise])
-        total_yield = (self.chosen_stock.get_performance() + self.extra_risk.get_bonus_performance()) / 100
+        prev_net_worth = self.net_worth
+        total_yield = (self.chosen_stock.get_performance()) / 100
         self.net_worth *= (1 + (total_yield * RISE[self.rise]))
-        self.check_net_worth()
+        self.check_net_worth(prev_net_worth)
         return
     
-    def check_net_worth(self) -> None:
-        if self.net_worth <= 0:
-            self.net_worth = 0
+    def add_total_winnings(self) -> None:
+        self.total_winnings += self.net_worth
+        self.net_worth = 0 #reset net worth
+        return
+    
+    def check_net_worth(self, previous_net_worth : float) -> None:  #! Selling logic
+        if self.net_worth >= previous_net_worth * self.take_profit :
+            self.add_total_winnings()
+        elif self.net_worth <= previous_net_worth * self.stop_loss :
+            self.add_total_winnings()    
+        elif self.net_worth <= 0: #?FUTURE: add leverage logic
+            self.add_total_winnings()
         return
 
-    def simulate_month(self) -> None:
-        for i in range(self.schedule):
-            #add invest function
-            self.growth()
-        self.print_net_worth()        
+    def simulate_months(self, months : int) -> None:
+        weeks_in_month = 4
+        for i in range(math.ceil(months * weeks_in_month)):
+            if (self.schedule != 3):
+                if (i % (weeks_in_month / self.schedule) == 0):
+                    self.invest()   
+            else:
+                if ((i % 4) < 3):
+                    self.invest()
+
+            if (i % 2 == 0):
+                self.growth()
+
+        self.add_total_winnings() #!Sell everything after 10 years
+        # self.print_net_worth()
+        # self.print_total_winnings()
+        
         return
+    
 
     def print_gene_catalogue(self) -> None:
-        gene_catalogue = [ST_LS_P_GENES, ST_LS_N_GENES, RISK_GENES, TYPE_GENES, SCHEDULE_GENES]
+        gene_catalogue = [STOP_LOSS_GENES, TAKE_PROFIT_GENES, RISK_GENES, STOCK_GENES, SCHEDULE_GENES]
         for gc in gene_catalogue:
             for g in gc:
                 print(g)
 
     def print_net_worth(self) -> None:
         print(self.net_worth)
+
+
+    def print_total_winnings(self) -> None:
+        print("Total winnings in 10 years: $", self.get_total_winnings())
 
